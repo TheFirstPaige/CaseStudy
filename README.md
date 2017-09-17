@@ -42,7 +42,7 @@ The next departure will be in 17 Min.
 ```
 
 ## Solution Testing
-I've provided five tests for the usage of this module - these commands can be copied/pasted into your PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can input the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
+I've provided four tests for the usage of this module - these commands can be copied/pasted into your PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can put the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
 
 #### Test I
 Test commands:
