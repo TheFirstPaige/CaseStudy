@@ -1,4 +1,4 @@
-﻿function Get-MTProviders{
+function Get-MTProviders{
     #GetProviders operation URI
         $providers = Invoke-RestMethod -Uri "http://svc.metrotransit.org/NexTrip/Providers"
     #GetProviders operation values
@@ -94,7 +94,6 @@ function Get-MTTimepointDepartures{
             [string[]]$Direction,
             [string[]]$Stop
             )
-
     If ($Direction -eq "north"){
         #GetTimepointDepartures operation URI
             $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/"+$RouteID+"/4/"+$Stop)
@@ -106,7 +105,7 @@ function Get-MTTimepointDepartures{
 
     ElseIf ($Direction -eq "south"){
         #GetTimepointDepartures operation URI
-            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/"+$RouteID+"/1/"+$Stop)
+            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/$RouteID/1/$Stop")
         #GetTimepointDepartures operation values
             $vtimept = $timept.ArrayOfNexTripDeparture.NexTripDeparture
         #Output
@@ -154,7 +153,6 @@ function Get-MTNextBus{
     $rstops = $stops.value
 
     #find timepoint departures
-    #$tdepart = Get-MTTimepointDepartures -RouteID $rnumber -Direction $Direction -Stop $rstops
     $tdepart = Get-MTTimepointDepartures -RouteID $rnumber -Direction $Direction -Stop $rstops
 
     #get current time and format it to Hour:Minute
@@ -166,22 +164,30 @@ function Get-MTNextBus{
     #narrow that information down to just the departure time
     $dtime = $selecttdepart.departuretext
 
-    #create new time span to get info on how many minutes to the next departure
-    $newTspan = New-TimeSpan -Start $ctime -End $dtime
-
-    #select only the minute output of the time span
-    $rnewTspan = $newTspan.Minutes
-
-    #output completed results!
-    if ($rnewTspan -gt 1){
-        Write-Output "The next departure will be in $rnewTspan minutes."
+    If ($dtime -like "*min*"){
+        Write-Output "The next departure will be in $dtime."
+        }
+    ElseIf ($dtime -like "*due*"){
+        Write-Output "The next departure is due right now."
         }
     else {
-        Write-Output "The next departure will be in $rnewTspan minutes."
+        #create new time span to get info on how many minutes to the next departure
+        $newTspan = New-TimeSpan -Start $ctime -End $dtime
+
+        #select only the minute output of the time span
+        $rnewTspan = $newTspan.Minutes
+
+            #output completed results!
+        if ($rnewTspan -gt 1){
+            Write-Output "The next departure will be in $rnewTspan minutes."
+            }
+        ElseIf ($rnewTspan -eq 1) {
+            Write-Output "The next departure will be in $rnewTspan minute."
+            }
+        Else {
+            Write-Output "There are no more busses/trains on this route departing from the specified location today."
         }
+
+    }
+
 }
-
-    
-
-
-    
