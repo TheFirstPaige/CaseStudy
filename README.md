@@ -30,10 +30,13 @@ Once prerequisite requirements have been met, the module can be imported. The .p
 ```
 New-Item -Path $HOME\Documents\ -ItemType directory -Name WindowsPowerShell\Modules\MetroTransitTools\
 ``` 
-Once the .psm1 file is in the required location, simply import the module via the following command:
+Once the .psm1 file is in the required location, simply import the MetroTransiInfo module via the following command:
 ```
 Import-Module $HOME\Documents\WindowsPowerShell\Modules\MetroTransitTools\MetroTransitInfo.psm1
 ```
+## Solution Implementation
+In order to get the information that the problem requests, we can simply use the Get-MTNextBus cmdlet that has been made available through the MetroTransitInfo module. The user will need to provide a bus route, a stop location, and a direction. Below is an example 
+
 
 ## Acknowledgments
 
