@@ -35,9 +35,81 @@ Once the .psm1 file is in the required location, simply import the MetroTransiIn
 Import-Module $HOME\Documents\WindowsPowerShell\Modules\MetroTransitTools\MetroTransitInfo.psm1
 ```
 ## Solution Implementation
-In order to get the information that the problem requests, we can simply use the Get-MTNextBus cmdlet that has been made available through the MetroTransitInfo module. The user will need to provide a bus route, a stop location, and a direction. Below is an example 
+In order to get the information that the problem requests, we can simply use the Get-MTNextBus cmdlet that has been made available through the MetroTransitInfo module. The user will need to provide a bus route (using -BusRoute), a stop location (using -Stop), and a direction (using -Direction). Below is an example command and output:
+```
+PS C:\> Get-MTNextBus -BusRoute "METRO Blue Line" -BusStop "Mall of America Station" -Direction "South"
+The next departure will be in 17 Min.
+```
 
+## Solution Testing
+I've provided five tests for the usage of this module - these commands can be copied/pasted into your PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can input the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
 
+#### Test I
+Test commands:
+```
+$BusRoute = "METRO Blue Line"
+$BusStop = "Mall of America Station"
+$Direction = "South"
+Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+```
+Test output:
+```
+PS C:\> $BusRoute = "METRO Blue Line"
+PS C:\> $BusStop = "Mall of America Station"
+PS C:\> $Direcion = "South"
+PS C:\> Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direcion
+The next departure will be in 17 Min.
+```
+
+#### Test II
+Test commands:
+```
+$BusRoute = "Robbinsdale-West Broadway-Bloomington Av"
+$BusStop = "Courage Center"
+$Direction = "North"
+Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+```
+Test output:
+```
+PS C:\> $BusRoute = "Robbinsdale-West Broadway-Bloomington Av"
+PS C:\> $BusStop = "Courage Center"
+PS C:\> $Direction = "North"
+PS C:\> Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+The next departure will be in 4 Min.
+```
+#### Test III
+Test commands:
+```
+$BusRoute = "Edina - Richfield - 77th St - MOA"
+$BusStop = "Minnesota Dr and France Ave"
+$Direction = "East"
+Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+```
+Test output:
+```
+PS C:\> $BusRoute = "Edina - Richfield - 77th St - MOA"
+PS C:\> $BusStop = "Minnesota Dr and France Ave"
+PS C:\> $Direction = "East"
+PS C:\> Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+The next departure will be in 11 minutes.
+```
+
+#### Test IV
+Test commands:
+```
+$BusRoute = "W Minnehaha - Raymond Sta - Hiawatha"
+$BusStop = "Minnehaha Ave and Snelling Ave"
+$Direction = "West"
+Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+```
+Test output:
+```
+PS C:\> $BusRoute = "W Minnehaha - Raymond Sta - Hiawatha"
+PS C:\> $BusStop = "Minnehaha Ave and Snelling Ave"
+PS C:\> $Direction = "West"
+PS C:\> Get-MTNextBus -BusRoute $BusRoute -BusStop $BusStop -Direction $Direction
+The next departure will be in 20 minutes.
+```
 ## Acknowledgments
 
 Thank you to GitHub user, Billie Thompson. This README.md was constructed using the template made available here: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
