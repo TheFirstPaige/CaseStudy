@@ -39,7 +39,7 @@ function Get-MTStops{
     # NOTE: North = 4, South = 1, East = 2, West = 3
     If ($Direction -eq "north"){
             #GetStops operation URI
-                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/"+$RouteID+"/4")
+                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/$RouteID/4")
             #GetStops operation values
                 $vstops = $stops.ArrayOfTextValuePair.TextValuePair
             #Output
@@ -48,7 +48,7 @@ function Get-MTStops{
 
     ElseIf ($Direction -eq "south"){
             #GetStops operation URI
-                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/"+$RouteID+"/1")
+                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/$RouteID/1")
             #GetStops operation values
                 $vstops = $stops.ArrayOfTextValuePair.TextValuePair
             #Output
@@ -56,7 +56,7 @@ function Get-MTStops{
         }
     ElseIf ($Direction -eq "east"){
             #GetStops operation URI
-                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/"+$RouteID+"/2")
+                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/$RouteID/2")
             #GetStops operation values
                 $vstops = $stops.ArrayOfTextValuePair.TextValuePair
             #Output
@@ -64,7 +64,7 @@ function Get-MTStops{
         }
     ElseIf ($Direction -eq "west") {
             #GetStops operation URI
-                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/"+$RouteID+"/3")
+                $stops = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/Stops/$RouteID/3")
             #GetStops operation values
                 $vstops = $stops.ArrayOfTextValuePair.TextValuePair
             #Output
@@ -96,7 +96,7 @@ function Get-MTTimepointDepartures{
             )
     If ($Direction -eq "north"){
         #GetTimepointDepartures operation URI
-            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/"+$RouteID+"/4/"+$Stop)
+            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/$RouteID/4/$Stop")
         #GetTimepointDepartures operation values
             $vtimept = $timept.ArrayOfNexTripDeparture.NexTripDeparture
         #Output
@@ -113,7 +113,7 @@ function Get-MTTimepointDepartures{
         }
     ElseIf ($Direction -eq "east"){
         #GetTimepointDepartures operation URI
-            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/"+$RouteID+"/3/"+$Stop)
+            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/$RouteID/2/$Stop")
         #GetTimepointDepartures operation values
             $vtimept = $timept.ArrayOfNexTripDeparture.NexTripDeparture
         #Output
@@ -121,7 +121,7 @@ function Get-MTTimepointDepartures{
         }
     ElseIf ($Direction -eq "west") {
         #GetTimepointDepartures operation URI
-            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/"+$RouteID+"/3/"+$Stop)
+            $timept = Invoke-RestMethod -Uri ("http://svc.metrotransit.org/NexTrip/$RouteID/3/$Stop")
         #GetTimepointDepartures operation values
             $vtimept = $timept.ArrayOfNexTripDeparture.NexTripDeparture
         #Output
@@ -155,39 +155,27 @@ function Get-MTNextBus{
     #find timepoint departures
     $tdepart = Get-MTTimepointDepartures -RouteID $rnumber -Direction $Direction -Stop $rstops
 
-    #get current time and format it to Hour:Minute
-    $ctime = Get-Date -UFormat "%H:%M"
+    #get current time and format it to Hour:Minute:Second
+    $ctime = Get-Date -UFormat "%H:%M:%S"
 
     #narrow results down to only departures that are after the current time, and grab only the first one
-    $selecttdepart = $tdepart | Where-Object {$_.departuretext -gt $ctime} | Select-Object -First 1
+    $selecttdepart = $tdepart | Select-Object -First 1
 
     #narrow that information down to just the departure time
-    $dtime = $selecttdepart.departuretext
+    $dtime = $selecttdepart.departuretime.substring(11)
 
-    If ($dtime -like "*min*"){
-        Write-Output "The next departure will be in $dtime."
+    $newTspan = New-TimeSpan -Start $ctime -End $dtime
+
+    #select only the minute output of the time span
+    $rnewTspan = $newTspan.Minutes
+
+    If ($rnewTspan -gt 1){
+        Write-Output "The next departure will be in $rnewTspan minutes."
         }
-    ElseIf ($dtime -like "*due*"){
-        Write-Output "The next departure is due right now."
+    ElseIf ($rnewTspan -eq 1) {
+        Write-Output "The next departure will be in $rnewTspan minute."
         }
-    else {
-        #create new time span to get info on how many minutes to the next departure
-        $newTspan = New-TimeSpan -Start $ctime -End $dtime
-
-        #select only the minute output of the time span
-        $rnewTspan = $newTspan.Minutes
-
-            #output completed results!
-        if ($rnewTspan -gt 1){
-            Write-Output "The next departure will be in $rnewTspan minutes."
-            }
-        ElseIf ($rnewTspan -eq 1) {
-            Write-Output "The next departure will be in $rnewTspan minute."
-            }
-        Else {
-            Write-Output "There are no more busses/trains on this route departing from the specified location today."
+    Else {
+        Write-Output "There are no more busses/trains on this route departing from the specified location today."
         }
-
     }
-
-}
