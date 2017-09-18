@@ -141,41 +141,40 @@ function Get-MTNextBus{
     # NOTE: North = 4, South = 1, East = 2, West = 3
 
     #Narrow the route listing down to our route
-    $find = Get-MTRoutes | Where-Object {$_.description -like "*$BusRoute*"}
+    $find = Get-MTRoutes | Where-Object {$_.description -like "*$BusRoute*"} -ErrorAction Ignore
 
     #isolate the route number
     $rnumber = $find.route
 
     #get stops for the direction specified by user, and find the specific stop
-    $stops = Get-MTStops -RouteID $rnumber -Direction $Direction | Where-Object {$_.text -like "*$BusStop*"}
+    $stops = Get-MTStops -RouteID $rnumber -Direction $Direction | Where-Object {$_.text -like "*$BusStop*"} -ErrorAction Ignore
   
     #isolate stop value
     $rstops = $stops.value
 
     #find timepoint departures
-    $tdepart = Get-MTTimepointDepartures -RouteID $rnumber -Direction $Direction -Stop $rstops
+    $tdepart = Get-MTTimepointDepartures -RouteID $rnumber -Direction $Direction -Stop $rstops -ErrorAction Ignore
 
-    #get current time and format it to Hour:Minute:Second
-    $ctime = Get-Date -UFormat "%H:%M:%S"
+    If ($tdepart -ne $null) {
+        #get current time and format it to Hour:Minute:Second
+        $ctime = Get-Date -UFormat "%H:%M:%S"
 
-    #narrow results down to only departures that are after the current time, and grab only the first one
-    $selecttdepart = $tdepart | Select-Object -First 1
+        #narrow results down to only departures that are after the current time, and grab only the first one
+        $selecttdepart = $tdepart | Select-Object -First 1 -ErrorAction Ignore
 
-    #narrow that information down to just the departure time
-    $dtime = $selecttdepart.departuretime.substring(11)
+        #narrow that information down to just the departure time
+        $dtime = $selecttdepart.departuretime.substring(11)
 
-    $newTspan = New-TimeSpan -Start $ctime -End $dtime
+        $newTspan = New-TimeSpan -Start $ctime -End $dtime -ErrorAction Ignore
 
-    #select only the minute output of the time span
-    $rnewTspan = $newTspan.Minutes
+        #select only the minute output of the time span
+        $rnewTspan = $newTspan.Minutes
 
-    If ($rnewTspan -gt 1){
-        Write-Output "The next departure will be in $rnewTspan minutes."
-        }
-    ElseIf ($rnewTspan -eq 1) {
-        Write-Output "The next departure will be in $rnewTspan minute."
-        }
-    Else {
-        Write-Output "There are no more busses/trains on this route departing from the specified location today."
+        If ($rnewTspan -gt 1){
+            Write-Output "The next departure will be in $rnewTspan minutes." -ErrorAction Ignore
+            }
+        ElseIf ($rnewTspan -eq 1) {
+            Write-Output "The next departure will be in $rnewTspan minute." -ErrorAction Ignore
+            }
         }
     }
