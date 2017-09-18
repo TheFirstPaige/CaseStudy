@@ -1,4 +1,11 @@
 function Get-MTProviders{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "Returns a list of area Transit providers. Providers are identified in the list of Routes allowing routes to be selected for a single provider."
+.DESCRIPTION
+    Get-MTProviders queries http://svc.metrotransit.org/NexTrip/Providers for information on Metro Transit providers.
+#>
     #GetProviders operation URI
         $providers = Invoke-RestMethod -Uri "http://svc.metrotransit.org/NexTrip/Providers"
     #GetProviders operation values
@@ -8,6 +15,13 @@ function Get-MTProviders{
         }
 
 function Get-MTRoutes{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "Returns a list of Transit routes that are in service on the current day."
+.DESCRIPTION
+    Get-MTRoutes queries http://svc.metrotransit.org/NexTrip/Routes for information on Metro Transit routes.
+#>
     #GetRoutes operation URI
         $routes = Invoke-RestMethod -Uri "http://svc.metrotransit.org/NexTrip/Routes"
     #GetRoutes operation values
@@ -17,6 +31,13 @@ function Get-MTRoutes{
     }
 
 function Get-MTDirections{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "Returns the two directions that are valid for a given route. Either North/South or East/West."
+.DESCRIPTION
+    Get-MTDirections queries http://svc.metrotransit.org/NexTrip/Directions/{ROUTE} for information on which directions the route runs.
+#>
     [CmdletBinding()]
         param(
             [int[]]$RouteID
@@ -30,6 +51,13 @@ function Get-MTDirections{
     }
 
 function Get-MTStops{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "Returns a list of Timepoint stops for the given Route/Direction."
+.DESCRIPTION
+    Get-MTStops queries http://svc.metrotransit.org/NexTrip/Stops/{ROUTE}/{DIRECTION} for information on route stops.
+#>
     [CmdletBinding()]
         param(
             [int[]]$RouteID,
@@ -74,6 +102,13 @@ function Get-MTStops{
     }
 
 function Get-MTDepartures{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "This operation is used to return a list of departures scheduled for any given bus stop."
+.DESCRIPTION
+    Get-MTDepartures queries http://svc.metrotransit.org/NexTrip/{STOPID} for information on departures.
+#>
     [CmdletBinding()]
         param(
             [int[]]$StopID
@@ -88,6 +123,13 @@ function Get-MTDepartures{
     }
 
 function Get-MTTimepointDepartures{
+<#
+.SYNOPSIS
+    Information gathered from http://svc.metrotransit.org/
+    "Returns the scheduled departures for a selected route, direction and timepoint stop."
+.DESCRIPTION
+    Get-MTTimepointDepartures queries http://svc.metrotransit.org/NexTrip/{ROUTE}/{DIRECTION}/{STOP} for information on route departures from a specified stop.
+#>
     [CmdletBinding()]
         param(
             [int[]]$RouteID,
@@ -132,6 +174,12 @@ function Get-MTTimepointDepartures{
 # *** START MODULES BEYOND REGULAR API OUTPUT ***
 
 function Get-MTNextBus{
+<#
+.SYNOPSIS
+    This function provides information on the next departure time for a route from a specified bus stop
+.DESCRIPTION
+    Get-MTNextBus uses information from the other functions in the MetroTransitInfo module to determine when the next bus/train leaves the specified stop for a certain route.
+#>
     [CmdletBinding()]
         param(
             [string[]]$BusRoute,
