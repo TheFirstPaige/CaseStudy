@@ -10,12 +10,9 @@ In this example, I have chosen to create a PowerShell module that can be used to
 
 ## Prerequisites
 #### Powershell Version Requirements
-This module was created using Powershell version 5, but should be functional on version 3 or later
-  *Version can be checked through $PSVersionTable
+This module was created using Powershell version 5, but should be functional on version 3 or later. Version can be checked through the $PSVersionTable variable.
 
 #### Powershell Execution Requirements
-Because this module has not been signed, on of two work arounds will need to be impleemented to be able to use this module properly.
-
 In order to import the module, the execution policy will need to be set to unrestricted. You can use the following command to set this policy, but it must be run as an administrator:
 ```
 Set-ExecutionPolicy Unrestricted
@@ -26,7 +23,7 @@ If you do not want to set your execution policy to unrestricted you can open ISE
 Set-ExecutionPolicy RemoteSigned
 ```
 ## Module Implementation
-Once prerequisite requirements have been met, the module can be imported. The .psm1 file will need to be placed in the $HOME\Documents\WindowsPowerShell\Modules\MetroTransitTools\ directory. In order to create these folders if they do not already exist, complete the following:
+Once prerequisite requirements have been met, the module can be imported. The .psm1 file will need to be placed in the $HOME\Documents\WindowsPowerShell\Modules\MetroTransitTools\ directory. In order to create these folders if they do not already exist the user can run the command below, which assumes that your $HOME directory already has a Documents directory. You can adjust the -Path and -Name property values as needed:
 ```
 New-Item -Path $HOME\Documents\ -ItemType directory -Name WindowsPowerShell\Modules\MetroTransitTools\
 ``` 
@@ -42,7 +39,7 @@ The next departure will be in 17 Min.
 ```
 
 ## Solution Testing
-I've provided four tests for the usage of this module - these commands can be copied/pasted into your PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can put the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
+I've provided four tests for the usage of this module - these commands can be copied/pasted into the user PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can put the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
 
 Note that if you're running these tests during a time where these routes don't have any departures currently scheduled for the specified stop then nothing will be returned - per the case study outline, that is the expected value. 
 
