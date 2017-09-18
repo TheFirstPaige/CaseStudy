@@ -44,6 +44,8 @@ The next departure will be in 17 Min.
 ## Solution Testing
 I've provided four tests for the usage of this module - these commands can be copied/pasted into your PowerShell console after the module has been properly imported. Note that the creation of variables is used only for ease of testing. Users can put the property values directly into the cmdlet as seen in the "Solution Implementation" section of this README.md file. 
 
+Note that if you're running these tests during a time where these routes don't have any departures currently scheduled for the specified stop then nothing will be returned - per the case study outline, that is the expected value. 
+
 #### Test I
 Test commands:
 ```
