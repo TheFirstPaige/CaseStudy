@@ -35,7 +35,7 @@ Once the .psm1 file is in the required location, simply import the MetroTransiIn
 Import-Module $HOME\Documents\WindowsPowerShell\Modules\MetroTransitTools\MetroTransitInfo.psm1
 ```
 ## Solution Implementation
-In order to get the information that the problem requests, we can simply use the Get-MTNextBus cmdlet that has been made available through the MetroTransitInfo module. The user will need to provide a bus route (using -BusRoute), a stop location (using -Stop), and a direction (using -Direction). Below is an example command and output:
+In order to get the information that the problem requests, we can simply use the Get-MTNextBus cmdlet that has been made available through the MetroTransitInfo module. The user will need to provide a bus route (by using the -BusRoute parameter), a stop location (by using the -Stop parameter), and a direction (by using the -Direction parameter). Below is an example command and output:
 ```
 PS C:\> Get-MTNextBus -BusRoute "METRO Blue Line" -BusStop "Mall of America Station" -Direction "South"
 The next departure will be in 17 Min.
